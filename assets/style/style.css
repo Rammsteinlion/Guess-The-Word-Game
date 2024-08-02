@@ -83,6 +83,7 @@ body {
   align-items: center;
   letter-spacing: 20px;
   font-size: 50px;
+  user-select: none;
 }
 
 .content_info {
