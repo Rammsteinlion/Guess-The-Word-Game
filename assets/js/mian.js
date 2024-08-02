@@ -4,6 +4,7 @@ const outputElement = document.getElementById("output");
 const inputContainer = document.getElementById("inputContainer");
 const messageElement = document.getElementById("message"); // Asegúrate de que existe en tu HTML
 const triesElement = document.getElementById("tries");
+const mistakesElement =  document.getElementById("mistakes");
 
 const diccionario = [
   "agente",
@@ -57,10 +58,7 @@ let totalTries = 0;
 const maxTries = 5;
 
 window.addEventListener("load", (event) => {
-  Tries();
-  console.log(totalTries);
-  
-  // triesElement.textContent = `Tries(${totalTries}/${maxTries}):`;
+  triesElement.textContent = `Tries(${totalTries}/${maxTries}):`;
 });
 
 btnRandom.addEventListener("click", function () {
@@ -77,6 +75,7 @@ btnRandom.addEventListener("click", function () {
 
   // Clear previous inputs
   inputContainer.innerHTML = "";
+  messageElement.innerHTML = "";
 
   // Create new input fields
   shuffledText.split("").forEach((char, index) => {
@@ -104,7 +103,9 @@ btnReset.addEventListener("click", function () {
   originalWord = "";
   outputElement.textContent = "";
   inputContainer.innerHTML = ""; // Clear the input fields
-  totalTries = "";
+  messageElement.textContent = "";
+  totalTries = 0;
+  triesElement.textContent = `Tries(${totalTries}/${maxTries}):`;
 });
 
 function handleInput(event) {
@@ -143,19 +144,33 @@ function validateInput() {
   const userInput = inputs.map((input) => input.value).join("");
 
   if (userInput.length === originalWord.length) {
+    validateWord(originalWord, userInput);
     if (userInput === originalWord) {
-      // messageElement.textContent = "¡Correcto!";
-      // messageElement.style.color = "green";
-      alert("Correcto");
+      messageElement.textContent = "¡Correcto!";
+      messageElement.style.color = "green";
     } else {
-      totalTries += totalTries
+      totalTries++;
+      totalTries <= 5 ? totalTries : 0;
+      triesElement.textContent = `Tries(${totalTries}/${maxTries}):`;
     }
   }
 }
 
+function validateWord(origin, userInput) {
+  // Verificar que las palabras tengan la misma longitud
+  if (origin.length !== userInput.length) {
+    throw new Error("Words must have the same length");
+  }
 
-function Tries(){
-  console.log(totalTries);
-  
-  // triesElement.textContent = `Tries(${totalTries}/${maxTries}):`;
+  // Crear una lista para almacenar las letras incorrectas
+  const incorrectLetters = [];
+
+  // Comparar las letras en cada posición
+  for (let i = 0; i < origin.length; i++) {
+    if (origin[i] !== userInput[i]) {
+      incorrectLetters.push(userInput[i])
+    }
+  }
+
+  return mistakesElement.textContent = incorrectLetters.join('');
 }
